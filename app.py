@@ -347,23 +347,24 @@ def load_data():
     url = "https://drive.google.com/uc?id=1foeVNmPwfuwKFtTIVFYrgmPsyaXar9CK"
     return pd.read_csv(url)
 
-
-import requests
-import joblib
-import tempfile
-
 @st.cache_resource
 def load_artifacts():
 
-    def load_model(url):
-        response = requests.get(url)
-        with tempfile.NamedTemporaryFile(delete=False) as tmp:
-            tmp.write(response.content)
-            return joblib.load(tmp.name)
+    import gdown
+    import joblib
+    import tempfile
 
-    clf = load_model("https://drive.google.com/uc?id=1f_9yxV1x9NfRarwzdM0WMagkBZTHI758")
-    reg = load_model("https://drive.google.com/uc?id=18rR1_pQC1v63svYniziBjH1ziM7Wq4Qs")
-    encoders = load_model("https://drive.google.com/uc?id=1Ki37DQ9dP1kjnTERsWhcADIf2U09NNMF")
+    def load_model(file_id):
+        url = f"https://drive.google.com/uc?id={file_id}"
+
+        output = tempfile.NamedTemporaryFile(delete=False).name
+        gdown.download(url, output, quiet=False)
+
+        return joblib.load(output)
+
+    clf = load_model("1f_9yxV1x9NfRarwzdMOWMagkBZTHI758")
+    reg = load_model("18rR1_pQC1v63svYniziBjH1ziM7Wq4Qs")
+    encoders = load_model("1Ki37DQ9dP1kjnTERsWHcADIf2U09NNMF")
 
     return clf, reg, encoders
 
