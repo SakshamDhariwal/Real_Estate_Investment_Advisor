@@ -1,4 +1,3 @@
-from turtle import position
 import streamlit.components.v1 as components
 import joblib
 import numpy as np
@@ -358,6 +357,7 @@ def load_artifacts():
 
 
 df = load_data()
+#st.write(df.head())
 clf, reg, encoders = load_artifacts()
 
 # =============================
@@ -1607,4 +1607,4 @@ div[data-testid="stVerticalBlock"]:has(div[data-testid="stPlotlyChart"]) {
 
 elif selected == "EDA Insights":
     import eda
-    eda.run(filtered)
+    eda.run(df)

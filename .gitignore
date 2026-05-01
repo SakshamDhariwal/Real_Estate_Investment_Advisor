@@ -2,3 +2,7 @@
 *.joblib
 *.csv
 __pycache__/
+mlruns/
+mlflow.db
+*.pdf
+.DS_Store

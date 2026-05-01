@@ -33,24 +33,16 @@ def run(df):
     # ======================================================
     # LOAD DATA
     # ======================================================
+    from pathlib import Path
     BASE_DIR = Path(__file__).resolve().parent
-    DATA_PATH = BASE_DIR / "cleaned_data.csv"
-
     def get_base64(img):
         with open(img, "rb") as f:
             return base64.b64encode(f.read()).decode()
 
     img64 = get_base64(BASE_DIR / "assets/building.png")
 
-    @st.cache_data
-    def load_data():
-        return pd.read_csv(DATA_PATH)
 
     # 🔥 USE SHARED DATA IF AVAILABLE
-    if "shared_df" in st.session_state:
-        df = st.session_state["shared_df"].copy()
-    else:
-        df = load_data()
 
     # ======================================================
     # CLEAN NUMERIC
