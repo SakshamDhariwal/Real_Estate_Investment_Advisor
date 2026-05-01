@@ -13,6 +13,7 @@ from fpdf import FPDF
 from streamlit_option_menu import option_menu
 from pathlib import Path
 from components import render_hero
+from utils.scoring import investment_rating
 
 
 def get_base64(img_path):
@@ -694,6 +695,16 @@ div[data-testid="stVerticalBlock"]:has(div[data-testid="stPlotlyChart"]) {
         if rating == "Cautious":
             return "#ea580c"
         return "#dc2626"
+    
+    def roi_color(roi: float) -> str:
+        if roi >= 20:
+            return "#16a34a"   # green
+        elif roi >= 10:
+            return "#d97706"   # yellow
+        elif roi >= 0:
+            return "#ea580c"   # orange
+        else:
+            return "#dc2626"   # red
 
     def get_feature_importance(model, feature_names):
         if hasattr(model, "feature_importances_"):
@@ -778,8 +789,10 @@ div[data-testid="stVerticalBlock"]:has(div[data-testid="stPlotlyChart"]) {
         roi = (profit / price) * 100 if price else 0.0
 
     investment_label = "Yes" if pred_class == 1 else "No"
-    rating = rating_from_roi(roi)
+    rating = investment_rating(roi, pred_class)
     rating_hex = rating_color(rating)
+
+    roi_hex = roi_color(roi)
 
     m1, m2, m3, m4 = st.columns(4, gap="large")
 
@@ -989,12 +1002,12 @@ div[data-testid="stVerticalBlock"]:has(div[data-testid="stPlotlyChart"]) {
 
             <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:16px;padding:14px;">
             <div style="font-size:12px;color:#94a3b8;">Expected Profit</div>
-            <div style="font-size:20px;font-weight:800;color:{'#16a34a' if profit >= 0 else '#dc2626'};">₹ {profit:.1f}L</div>
+            <div style="font-size:20px;font-weight:800;color:{"#000000" if profit >= 0 else '#dc2626'};">₹ {profit:.1f}L</div>
             </div>
 
             <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:16px;padding:14px;">
             <div style="font-size:12px;color:#94a3b8;">ROI</div>
-            <div style="font-size:20px;font-weight:800;color:{'#16a34a' if roi >= 20 else '#dc2626'};">{roi:.1f}%</div>
+            <div style="font-size:20px;font-weight:800;color:{roi_hex};">{roi:.1f}%</div>
             </div>
 
             <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:16px;padding:14px;">
@@ -1475,7 +1488,7 @@ div[data-testid="stVerticalBlock"]:has(div[data-testid="stPlotlyChart"]) {
                     </div>
                     <div class="info-box">
                         <div class="info-label">ROI Outlook</div>
-                        <div class="info-value" style="color:{class_color};">{roi:.1f}%</div>
+                        <div class="info-value" style="color:{roi_hex};">{roi:.1f}%</div>
                     </div>
                 </div>
                 """,
