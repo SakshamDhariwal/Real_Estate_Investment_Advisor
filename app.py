@@ -361,9 +361,9 @@ def load_artifacts():
             tmp.write(response.content)
             return joblib.load(tmp.name)
 
-    clf = load_model("https://drive.google.com/file/d/1f_9yxV1x9NfRarwzdMOWMagkBZTHI758")
-    reg = load_model("https://drive.google.com/file/d/18rR1_pQC1v63svYniziBjH1ziM7Wq4Qs")
-    encoders = load_model("https://drive.google.com/file/d/1Ki37DQ9dP1kjnTERsWHcADIf2U09NNMF")
+    clf = load_model("https://drive.google.com/uc?id=1f_9yxV1x9NfRarwzdM0WMagkBZTHI758")
+    reg = load_model("https://drive.google.com/uc?id=18rR1_pQC1v63svYniziBjH1ziM7Wq4Qs")
+    encoders = load_model("https://drive.google.com/uc?id=1Ki37DQ9dP1kjnTERsWhcADIf2U09NNMF")
 
     return clf, reg, encoders
 
