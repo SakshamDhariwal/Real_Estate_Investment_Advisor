@@ -348,11 +348,23 @@ def load_data():
     return pd.read_csv(url)
 
 
+import requests
+import joblib
+import tempfile
+
 @st.cache_resource
 def load_artifacts():
-    clf = joblib.load(MODELS_DIR / "classifier.pkl")
-    reg = joblib.load(MODELS_DIR / "regressor.pkl")
-    encoders = joblib.load(MODELS_DIR / "encoders.pkl")
+
+    def load_model(url):
+        response = requests.get(url)
+        with tempfile.NamedTemporaryFile(delete=False) as tmp:
+            tmp.write(response.content)
+            return joblib.load(tmp.name)
+
+    clf = load_model("https://drive.google.com/file/d/1f_9yxV1x9NfRarwzdMOWMagkBZTHI758")
+    reg = load_model("https://drive.google.com/file/d/18rR1_pQC1v63svYniziBjH1ziM7Wq4Qs")
+    encoders = load_model("https://drive.google.com/file/d/1Ki37DQ9dP1kjnTERsWHcADIf2U09NNMF")
+
     return clf, reg, encoders
 
 
